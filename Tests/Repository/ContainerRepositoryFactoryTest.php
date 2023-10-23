@@ -88,7 +88,7 @@ class ContainerRepositoryFactoryTest extends TestCase
         $factory = new ContainerRepositoryFactory($container);
 
         $this->expectExceptionMessage(sprintf(
-            'The "%s" document repository implements "%s", but its service could not be found.'
+            'FAIL The "%s" document repository implements "%s", but its service could not be found.'
             . ' Make sure the service exists and is tagged with "doctrine_mongodb.odm.repository_service".',
             StubServiceRepository::class,
             ServiceDocumentRepositoryInterface::class,
