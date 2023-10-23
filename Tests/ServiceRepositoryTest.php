@@ -124,7 +124,7 @@ class ServiceRepositoryTest extends TestCase
         // custom service document repository
         $customServiceDocumentRepo = $dm->getRepository(TestCustomServiceRepoDocument::class);
         $this->assertSame($customServiceDocumentRepo, $this->container->get('test_alias__' . TestCustomServiceRepoDocumentRepository::class));
-        $this->assertInstanceOf(ManagerRegistry::class, $customServiceDocumentRepo);
+        $this->assertInstanceOf(ManagerRegistry::class, $customServiceDocumentRepo->getManagerForClass(TestCustomServiceRepoDocument::class));
         // a smoke test, trying some methods
         $this->assertSame(TestCustomServiceRepoDocument::class, $customServiceDocumentRepo->getClassName());
         $this->assertInstanceOf(Builder::class, $customServiceDocumentRepo->createQueryBuilder());
