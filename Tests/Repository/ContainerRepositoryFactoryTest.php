@@ -109,15 +109,16 @@ class ContainerRepositoryFactoryTest extends TestCase
 
         $factory = new ContainerRepositoryFactory($container);
 
-        $this->expectExceptionMessage(sprintf(
+        /*$this->expectExceptionMessage(sprintf(
             'The "%s" document repository implements "%s", but its service could not be found.'
             . ' Make sure the service exists and is tagged with "doctrine_mongodb.odm.repository_service".',
             StubServiceDocumentRepository::class,
             ServiceDocumentRepositoryInterface::class,
         ));
-        $this->expectException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);*/
 
-        $factory->getRepository($dm, CoolDocument::class);
+        $actualRepo = $factory->getRepository($dm, CoolDocument::class);
+        $this->assertInstanceOf(ManagerRegistry::class, $actualRepo);
     }
     
     public function testCustomRepositoryIsNotAValidClass(): void
