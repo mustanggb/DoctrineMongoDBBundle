@@ -6,6 +6,7 @@ namespace Doctrine\Bundle\MongoDBBundle\Tests;
 
 use Doctrine\Bundle\MongoDBBundle\DependencyInjection\Compiler\ServiceRepositoryCompilerPass;
 use Doctrine\Bundle\MongoDBBundle\DependencyInjection\DoctrineMongoDBExtension;
+use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
 use Doctrine\Bundle\MongoDBBundle\Tests\DependencyInjection\Fixtures\Bundles\RepositoryServiceBundle\Document\TestCustomClassRepoDocument;
 use Doctrine\Bundle\MongoDBBundle\Tests\DependencyInjection\Fixtures\Bundles\RepositoryServiceBundle\Document\TestCustomServiceRepoDocument;
 use Doctrine\Bundle\MongoDBBundle\Tests\DependencyInjection\Fixtures\Bundles\RepositoryServiceBundle\Document\TestCustomServiceRepoFile;
@@ -123,6 +124,7 @@ class ServiceRepositoryTest extends TestCase
         // custom service document repository
         $customServiceDocumentRepo = $dm->getRepository(TestCustomServiceRepoDocument::class);
         $this->assertSame($customServiceDocumentRepo, $this->container->get('test_alias__' . TestCustomServiceRepoDocumentRepository::class));
+        $this->assertInstanceOf(ManagerRegistry::class, $customServiceDocumentRepo);
         // a smoke test, trying some methods
         $this->assertSame(TestCustomServiceRepoDocument::class, $customServiceDocumentRepo->getClassName());
         $this->assertInstanceOf(Builder::class, $customServiceDocumentRepo->createQueryBuilder());
