@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Doctrine\Bundle\MongoDBBundle\Tests\Repository;
 
 use Doctrine\Bundle\MongoDBBundle\Repository\ContainerRepositoryFactory;
+use Doctrine\Bundle\MongoDBBundle\Repository\ServiceDocumentRepository;
 use Doctrine\Bundle\MongoDBBundle\Repository\ServiceDocumentRepositoryInterface;
 use Doctrine\Common\EventManager;
 use Doctrine\ODM\MongoDB\Configuration;
@@ -88,7 +89,7 @@ class ContainerRepositoryFactoryTest extends TestCase
         $factory = new ContainerRepositoryFactory($container);
 
         $this->expectExceptionMessage(sprintf(
-            'FAIL The "%s" document repository implements "%s", but its service could not be found.'
+            'The "%s" document repository implements "%s", but its service could not be found.'
             . ' Make sure the service exists and is tagged with "doctrine_mongodb.odm.repository_service".',
             StubServiceRepository::class,
             ServiceDocumentRepositoryInterface::class,
@@ -98,6 +99,27 @@ class ContainerRepositoryFactoryTest extends TestCase
         $factory->getRepository($dm, CoolDocument::class);
     }
 
+    public function testRepositoryConstructorIsManagerRegistry(): void
+    {
+        $container = $this->createContainer([]);
+
+        $dm = $this->createDocumentManager([
+            CoolDocument::class => StubServiceDocumentRepository::class,
+        ]);
+
+        $factory = new ContainerRepositoryFactory($container);
+
+        $this->expectExceptionMessage(sprintf(
+            'FAIL2 The "%s" document repository implements "%s", but its service could not be found.'
+            . ' Make sure the service exists and is tagged with "doctrine_mongodb.odm.repository_service".',
+            StubServiceDocumentRepository::class,
+            ServiceDocumentRepositoryInterface::class,
+        ));
+        $this->expectException(RuntimeException::class);
+
+        $factory->getRepository($dm, CoolDocument::class);
+    }
+    
     public function testCustomRepositoryIsNotAValidClass(): void
     {
         $container = $this->createContainer([]);
@@ -168,6 +190,11 @@ class StubRepository extends DocumentRepository
 
 /** @template-extends DocumentRepository<object> */
 class StubServiceRepository extends DocumentRepository implements ServiceDocumentRepositoryInterface
+{
+}
+
+/** @template-extends ServiceDocumentRepository<object> */
+class StubServiceDocumentRepository extends ServiceDocumentRepository
 {
 }
 
