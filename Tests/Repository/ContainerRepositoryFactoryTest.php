@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 namespace Doctrine\Bundle\MongoDBBundle\Tests\Repository;
-
 use Doctrine\Bundle\MongoDBBundle\Repository\ContainerRepositoryFactory;
 use Doctrine\Bundle\MongoDBBundle\Repository\ServiceDocumentRepository;
 use Doctrine\Bundle\MongoDBBundle\Repository\ServiceDocumentRepositoryInterface;
+use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
 use Doctrine\Common\EventManager;
 use Doctrine\ODM\MongoDB\Configuration;
 use Doctrine\ODM\MongoDB\DocumentManager;
@@ -110,7 +110,7 @@ class ContainerRepositoryFactoryTest extends TestCase
         $factory = new ContainerRepositoryFactory($container);
 
         $this->expectExceptionMessage(sprintf(
-            'FAIL2 The "%s" document repository implements "%s", but its service could not be found.'
+            'The "%s" document repository implements "%s", but its service could not be found.'
             . ' Make sure the service exists and is tagged with "doctrine_mongodb.odm.repository_service".',
             StubServiceDocumentRepository::class,
             ServiceDocumentRepositoryInterface::class,
@@ -196,6 +196,10 @@ class StubServiceRepository extends DocumentRepository implements ServiceDocumen
 /** @template-extends ServiceDocumentRepository<object> */
 class StubServiceDocumentRepository extends ServiceDocumentRepository
 {
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Product::class);
+    }
 }
 
 class CoolDocument
